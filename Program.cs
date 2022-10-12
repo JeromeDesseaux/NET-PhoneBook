@@ -1,4 +1,5 @@
 using PhoneBook.Helpers;
+using PhoneBook.Repositories;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -9,6 +10,7 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddDbContext<DataContext>();
+builder.Services.AddScoped<PersonRepository>();
 
 var app = builder.Build();
 
