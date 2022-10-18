@@ -1,3 +1,4 @@
+using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using PhoneBook.Models;
 using PhoneBook.Repositories;
@@ -10,22 +11,27 @@ public class PersonController
 {
     private readonly ILogger<PersonController> _logger;
     private readonly PersonRepository _personRepository;
+    private readonly IMapper _mapper;
 
-    public PersonController(ILogger<PersonController> logger, PersonRepository personRepository)
+    public PersonController(ILogger<PersonController> logger, PersonRepository personRepository, IMapper mapper)
     {
         _logger = logger;
         _personRepository = personRepository;
+        _mapper = mapper;
     }
 
     [HttpGet("/")]
-    public IEnumerable<Person> GetAllPersons()
+    public IEnumerable<PersonGetDTO> GetAllPersons()
     {
-        return this._personRepository.Get();
+        var allPersons = this._personRepository.Get();
+        return _mapper.Map<PersonGetDTO[]>(allPersons);
     }
     
     [HttpPost("/")]
-    public Person AddPerson(Person person)
+    public PersonGetDTO AddPerson(PersonCreateDTO person)
     {
-        return this._personRepository.Insert(person);
+        var readyToInsertPerson = _mapper.Map<Person>(person);
+        var dbPerson = this._personRepository.Insert(readyToInsertPerson);
+        return _mapper.Map<PersonGetDTO>(dbPerson);
     }
 }
