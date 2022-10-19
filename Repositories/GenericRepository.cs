@@ -69,11 +69,13 @@ public class GenericRepository<TEntity> where TEntity : class
             _dbSet.Attach(entityToDelete);
         }
         _dbSet.Remove(entityToDelete);
+        this._context.SaveChanges();
     }
 
     public virtual void Update(TEntity entityToUpdate)
     {
         _dbSet.Attach(entityToUpdate);
         _context.Entry(entityToUpdate).State = EntityState.Modified;
+        this._context.SaveChanges();
     }
 }
